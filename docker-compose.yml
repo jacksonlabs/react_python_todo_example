@@ -1,0 +1,43 @@
+version: '2.2'
+services:
+  todo-db:
+    image: postgres
+    user: "${UID}:${GID}"
+    container_name: todo-db
+    environment:
+      - POSTGRES_USER=xanderj.system
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=todo-db
+    ports:
+      - 5432:5432
+    volumes:
+      - "./pgdata:/var/lib/postgresql/data"
+
+  todo-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: todo-api
+    environment:
+      - POSTGRES_URL=todo-db:5432
+      - POSTGRES_USER=xanderj.system
+      - POSTGRES_PW=password
+      - POSTGRES_DB=todo-db
+      - FLASK_ENV=development
+    ports:
+      - 5000:5000
+    volumes:
+      - "./api:/api:ro"
+
+  todo-pgadmin:
+    image: dpage/pgadmin4
+    user: "${UID}:${GID}"
+    container_name: todo-pgadmin
+    ports:
+      - 8080:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=xanderj.system@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+    volumes:
+      - "./pgadmin:/var/lib/pgadmin"
+

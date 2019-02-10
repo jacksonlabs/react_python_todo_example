@@ -1,0 +1,6 @@
+flask
+flask_restful
+flask_sqlalchemy
+flask_restless
+sqlalchemy_utils
+psycopg2-binary
