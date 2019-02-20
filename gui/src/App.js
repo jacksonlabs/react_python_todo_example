@@ -12,24 +12,43 @@ import {ToDoContext} from './ToDoContext';
 class MyProvider extends Component {
   state = {
     list: [],
+    hideComplete: true,
     testFunction: this.testFunction,
     updateList: this.updateList.bind(this),
     fetchList: this.fetchList.bind(this),
     createItem: this.createItem.bind(this),
     deleteItem: this.deleteItem.bind(this),
     setStatus: this.setStatus.bind(this),
-    updateTask: this.updateTask.bind(this)
+    updateTask: this.updateTask.bind(this),
+    setHidden: this.setHidden.bind(this)
   }
 
   testFunction(arg) {
     console.log(`testFunction({arg: ${arg}})`);
   }
 
+  setHidden(hidden) {
+    console.log(`setHidden(${hidden})`);
+    this.setState({
+      hideComplete: hidden
+    });
+    this.fetchList();
+  }
+
   updateList(list) {
     console.log('updateList({list: <list>})');
-    this.setState({
-      list
-    });
+    if (this.state.hideComplete === true) {
+      var filteredList = list.filter(function (task) {
+        return task.complete === false;
+      });
+      this.setState({
+        list: filteredList
+      });
+    } else {
+      this.setState({
+        list
+      });
+    }
   }
 
   async fetchList() {
@@ -139,7 +158,16 @@ class ToDo extends Component {
     if (this.state.inFocus) {
       taskPanel = <React.Fragment>
                     <InputGroup>
-                      <Input value={this.state.task} onChange={e => this.setState({task: e.target.value})}/>
+                      <Input
+                        value={this.state.task}
+                        onChange={e => this.setState({task: e.target.value})}
+                        onKeyPress={event => {
+                          if (event.key === 'Enter') {
+                            this.context.state.updateTask(this.props.id, this.state.task);
+                        this.setState({inFocus: false});
+                          }
+                        }}
+                      />
                       <Button onClick={() => {
                         this.context.state.updateTask(this.props.id, this.state.task);
                         this.setState({inFocus: false});
@@ -217,7 +245,16 @@ class ToDoAdd extends Component {
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>Task</InputGroupText>
                   </InputGroupAddon>
-                  <Input value={this.state.input} onChange={e => this.setState({input: e.target.value})}/>
+                  <Input
+                    value={this.state.input}
+                    onChange={e => this.setState({input: e.target.value})}
+                    onKeyPress={event => {
+                      if (event.key === 'Enter') {
+                        context.state.createItem(this.state.input);
+                        this.setState({input: ''})
+                      }
+                    }}
+                  />
                   <Button onClick={() => {
                     context.state.createItem(this.state.input);
                     this.setState({input: ''});
@@ -230,6 +267,50 @@ class ToDoAdd extends Component {
   }
 }
 
+class ToDoSettings extends Component {
+  state = {
+    hidden: true
+  }
+
+  componentDidMount = event => {
+    this.setState({
+      input: this.context.state.hideComplete
+    });
+  }
+
+  toggleHidden() {
+    const newStatus = !this.state.hidden
+    this.setState({
+      hidden: newStatus
+    });
+    this.context.state.setHidden(
+      newStatus
+    );
+  }
+
+  render() {
+    return (
+        <ToDoContext.Consumer>
+            {(context) => (
+              <div style={{ marginTop: 20 }}>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <Input addon type="checkbox" checked={this.state.hidden} value={this.state.hidden} onChange={e => {this.toggleHidden()}}/>
+                    </InputGroupText>
+                    <InputGroupAddon addonType="append">
+                      <InputGroupText>Hide Completed Tasks</InputGroupText>
+                    </InputGroupAddon>
+                  </InputGroupAddon>
+                </InputGroup>
+              </div>
+            )}
+        </ToDoContext.Consumer>
+    )
+  }
+}
+ToDoSettings.contextType = ToDoContext;
+
 class App extends Component {
   render() {
     return (
@@ -241,6 +322,9 @@ class App extends Component {
           <Container fluid>
             <Row>
               <Col><ToDoAdd /></Col>
+            </Row>
+            <Row>
+              <Col><ToDoSettings /></Col>
             </Row>
             <Row>
               <Col><ToDoList /></Col>
