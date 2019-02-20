@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=todo-db
     ports:
-      - 5432:5432
+      - 127.0.0.1:5432:5432
     volumes:
       - "./pgdata:/var/lib/postgresql/data"
 
@@ -18,13 +18,22 @@ services:
       context: ./api
       dockerfile: Dockerfile
     container_name: todo-api
+    hostname: todo-api.test.xanderj.com
     environment:
       - POSTGRES_URL=todo-db:5432
       - POSTGRES_USER=xanderj.system
       - POSTGRES_PW=password
       - POSTGRES_DB=todo-db
       - FLASK_ENV=development
+      - VIRTUAL_HOST=todo-api.test.xanderj.com
+      - LETSENCRYPT_HOST=todo-api.test.xanderj.com
+      - LETSENCRYPT_EMAIL=xanderj.system@gmail.com
     ports:
       - 5000:5000
     volumes:
       - "./api:/api:ro"
+
+networks:
+  default:
+    external:
+      name: nginx-proxy

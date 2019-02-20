@@ -12,6 +12,8 @@ import {ToDoContext} from './ToDoContext';
 class MyProvider extends Component {
   state = {
     list: [],
+    apiEndpoint: 'todo-api.test.xanderj.com',
+    apiProto: 'https',
     hideComplete: true,
     testFunction: this.testFunction,
     updateList: this.updateList.bind(this),
@@ -53,7 +55,7 @@ class MyProvider extends Component {
 
   async fetchList() {
     console.log('fetchList()');
-    await axios.get('http://localhost:5000/api/todo')
+    await axios.get(`${this.state.apiProto}://${this.state.apiEndpoint}/api/todo`)
       .then(({ data })=> {
         this.updateList(data.objects);
       })
@@ -66,7 +68,7 @@ class MyProvider extends Component {
     console.log(`createItem({description: ${description}})`);
     if (description !== '') {
       await axios
-        .post(`http://localhost:5000/api/todo`, {
+        .post(`${this.state.apiProto}://${this.state.apiEndpoint}/api/todo`, {
           description: description,
           complete: false
         })
@@ -80,7 +82,7 @@ class MyProvider extends Component {
   async deleteItem(id) {
     console.log(`deleteItem({id: ${id}})`);
     await axios
-      .delete(`http://localhost:5000/api/todo/${id}`)
+      .delete(`${this.state.apiProto}://${this.state.apiEndpoint}/api/todo/${id}`)
       .catch((err)=> {
         console.log(err)
       });
@@ -90,7 +92,7 @@ class MyProvider extends Component {
   async setStatus(id, complete) {
     console.log(`setStatus({id: ${id}, complete: ${complete}})`);
     await axios
-      .patch(`http://localhost:5000/api/todo/${id}`, {
+      .patch(`${this.state.apiProto}://${this.state.apiEndpoint}/api/todo/${id}`, {
         complete: complete
       })
       .catch((err)=> {
@@ -102,7 +104,7 @@ class MyProvider extends Component {
   async updateTask(id, description) {
     console.log(`updateTask({id: ${id}, description: ${description}})`);
     await axios
-      .patch(`http://localhost:5000/api/todo/${id}`, {
+      .patch(`${this.state.apiProto}://${this.state.apiEndpoint}/api/todo/${id}`, {
         description: description
       })
       .catch((err)=> {
