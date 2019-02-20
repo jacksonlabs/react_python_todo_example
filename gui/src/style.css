@@ -1,0 +1,7 @@
+body {
+  font-size: 1.6rem;
+}
+
+input[type="checkbox"] {
+  transform:scale(2, 2);
+}

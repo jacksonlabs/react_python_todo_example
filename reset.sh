@@ -1,4 +1,7 @@
 #!/bin/bash
 
+./stop.sh
+
 rm -rf pgdata
-rm -rf pgadmin
+
+docker rmi -f reactpythontodoexample_todo-api:latest

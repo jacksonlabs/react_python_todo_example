@@ -2,5 +2,6 @@ flask
 flask_restful
 flask_sqlalchemy
 flask_restless
+flask-cors
 sqlalchemy_utils
 psycopg2-binary

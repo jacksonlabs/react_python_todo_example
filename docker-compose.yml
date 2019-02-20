@@ -28,16 +28,3 @@ services:
       - 5000:5000
     volumes:
       - "./api:/api:ro"
-
-  todo-pgadmin:
-    image: dpage/pgadmin4
-    user: "${UID}:${GID}"
-    container_name: todo-pgadmin
-    ports:
-      - 8080:80
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=xanderj.system@gmail.com
-      - PGADMIN_DEFAULT_PASSWORD=password
-    volumes:
-      - "./pgadmin:/var/lib/pgadmin"
-

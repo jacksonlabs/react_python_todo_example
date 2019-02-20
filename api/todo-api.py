@@ -39,12 +39,23 @@ class Todo(db.Model):
 # Create the SQL tables
 db.create_all()
 
+def add_cors_header(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'HEAD, GET, POST, PATCH, PUT, OPTIONS, DELETE'
+    response.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+
+    return response
+
 # Create the Flask-Restless API manager.
 manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
 
 # Create API endpoints, each at a different URL and with different allowed HTTP
 # methods, but which all affect the Todo model.
-manager.create_api(Todo, methods=['POST', 'GET', 'PATCH', 'DELETE'])
+manager.create_api(Todo, methods=['POST', 'PATCH', 'DELETE'])
+manager.create_api(Todo, methods=['GET'], results_per_page=0)
+
+app.after_request(add_cors_header)
 
 # start the flask loop
 if __name__ == "__main__":

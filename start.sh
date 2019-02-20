@@ -1,6 +1,5 @@
 #!/bin/bash
 
-mkdir -p pgadmin
 mkdir -p pgdata
 
 export UID=${UID}
