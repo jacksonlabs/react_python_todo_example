@@ -14,7 +14,7 @@ services:
       - "./pgdata_dev:/var/lib/postgresql/data"
 
   todo-api_dev:
-    image: todo-api:dev
+    image: jacksonlabs/todo-api:dev
     container_name: todo-api_dev
     hostname: todo-api.dev.xanderj.com
     environment:
@@ -29,7 +29,7 @@ services:
       - "./api:/api:ro"
 
   todo-gui_dev:
-    image: todo-gui:dev
+    image: jacksonlabs/todo-gui:dev
     container_name: todo-gui_dev
     hostname: todo.dev.xanderj.com
     environment:

@@ -13,7 +13,7 @@ services:
       - "./pgdata_test:/var/lib/postgresql/data"
 
   todo-api_test:
-    image: todo-api:test
+    image: jacksonlabs/todo-api:test
     container_name: todo-api_test
     restart: always
     hostname: todo-api.test.xanderj.com
@@ -30,7 +30,7 @@ services:
       - "./api:/api:ro"
 
   todo-gui_test:
-    image: todo-gui:test
+    image: jacksonlabs/todo-gui:test
     container_name: todo-gui_test
     restart: always
     hostname: todo.test.xanderj.com

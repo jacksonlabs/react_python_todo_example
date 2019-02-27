@@ -13,7 +13,7 @@ services:
       - "./pgdata_prod:/var/lib/postgresql/data"
 
   todo-api_prod:
-    image: todo-api:prod
+    image: jacksonlabs/todo-api:prod
     container_name: todo-api_prod
     restart: always
     hostname: todo-api.xanderj.com
@@ -30,7 +30,7 @@ services:
       - "./api:/api:ro"
 
   todo-gui_prod:
-    image: todo-gui:prod
+    image: jacksonlabs/todo-gui:prod
     container_name: todo-gui_prod
     restart: always
     hostname: todo.xanderj.com
