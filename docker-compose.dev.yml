@@ -23,9 +23,6 @@ services:
       - POSTGRES_PW=password
       - POSTGRES_DB=todo-db
       - FLASK_ENV=development
-      - VIRTUAL_HOST=todo-api.dev.xanderj.com
-      - LETSENCRYPT_HOST=todo-api.dev.xanderj.com
-      - LETSENCRYPT_EMAIL=xanderj.system@gmail.com
     ports:
       - 5000:5000
     volumes:
@@ -38,15 +35,7 @@ services:
     environment:
       - REACT_APP_ENVIRONMENT=dev
       - REACT_APP_API_ENDPOINT=http://localhost:5000
-      - VIRTUAL_HOST=todo.dev.xanderj.com
-      - LETSENCRYPT_HOST=todo.dev.xanderj.com
-      - LETSENCRYPT_EMAIL=xanderj.system@gmail.com
     ports:
       - 3000:3000
     volumes:
       - "./gui:/gui"
-
-networks:
-  default:
-    external:
-      name: nginx-proxy

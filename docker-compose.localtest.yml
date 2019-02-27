@@ -1,0 +1,40 @@
+version: '2.2'
+services:
+  todo-db_localtest:
+    image: postgres
+    user: "${UID}:${GID}"
+    container_name: todo-db_localtest
+    restart: always
+    environment:
+      - POSTGRES_USER=xanderj.system
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=todo-db
+    volumes:
+      - "./pgdata_localtest:/var/lib/postgresql/data"
+
+  todo-api_localtest:
+    image: jacksonlabs/todo-api:localtest
+    container_name: todo-api_localtest
+    restart: always
+    hostname: todo-api_localtest
+    environment:
+      - POSTGRES_URL=todo-db_localtest:5432
+      - POSTGRES_USER=xanderj.system
+      - POSTGRES_PW=password
+      - POSTGRES_DB=todo-db
+      - FLASK_ENV=development
+    volumes:
+      - "./api:/api:ro"
+    ports:
+      - 5000:5000
+
+  todo-gui_localtest:
+    image: jacksonlabs/todo-gui:localtest
+    container_name: todo-gui_localtest
+    restart: always
+    hostname: todo-gui_localtest
+    environment:
+      - REACT_APP_ENVIRONMENT=localtest
+      - REACT_APP_API_ENDPOINT=http://localhost:5000
+    ports:
+      - 3000:3000

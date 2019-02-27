@@ -1,15 +1,13 @@
 FROM node:11
 
-RUN yarn global add serve
+RUN mkdir /gui
 
-RUN mkdir /code
+ADD . /gui/
 
-ADD . /code/
+WORKDIR /gui/
 
-WORKDIR /code/
+EXPOSE 3000
 
-RUN yarn cache clean && yarn build
+RUN yarn install
 
-CMD serve -s build
-
-EXPOSE 5000
+CMD yarn start

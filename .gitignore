@@ -1,3 +1,4 @@
 pgdata_production/
+pgdata_localtest/
 pgdata_test/
 pgdata_dev/
