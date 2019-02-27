@@ -316,7 +316,9 @@ class App extends Component {
   render() {
     return (
       <MyProvider>
-        <p>{process.env.REACT_APP_ENVIRONMENT} {process.env.REACT_APP_API_ENDPOINT}</p>
+        <p>env: {process.env.REACT_APP_ENVIRONMENT}</p>
+        <p>node env: {process.env.NODE_ENV}</p>
+        <p>api: {process.env.REACT_APP_API_ENDPOINT}</p>
         <div>
           <Navbar color="dark" dark className="navbar-expand">
             <NavbarBrand href="/" className="mr-auto">ToDo List <span role="img" aria-label="">🍺</span></NavbarBrand>

@@ -33,12 +33,16 @@ fi
 if [ "$environment" == "test" ]; then
   mkdir -p pgdata_test
   docker build -t todo-api:test -f ./api/Dockerfile ./api
-  docker build -t todo-gui:test -f ./gui/Dockerfile ./gui
+  cd gui
+  docker build -t todo-gui:test -f ./Dockerfile .
+  cd ..
   docker-compose -f docker-compose.test.yml up -d
 fi
 if [ "$environment" == "prod" ]; then
   mkdir -p pgdata_prod
   docker build -t todo-api:prod -f ./api/Dockerfile ./api
-  docker build -t todo-gui:prod -f ./gui/Dockerfile ./gui
+  cd gui
+  docker build -t todo-gui:prod -f ./Dockerfile .
+  cd ..
   docker-compose -f docker-compose.prod.yml up -d
 fi
