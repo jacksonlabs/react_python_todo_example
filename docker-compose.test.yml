@@ -1,26 +1,22 @@
 version: '2.2'
 services:
-  todo-db:
+  todo-db_test:
     image: postgres
     user: "${UID}:${GID}"
-    container_name: todo-db
+    container_name: todo-db_test
     environment:
       - POSTGRES_USER=xanderj.system
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=todo-db
-    ports:
-      - 127.0.0.1:5432:5432
     volumes:
-      - "./pgdata:/var/lib/postgresql/data"
+      - "./pgdata_test:/var/lib/postgresql/data"
 
-  todo-api:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    container_name: todo-api
+  todo-api_test:
+    image: todo-api:test
+    container_name: todo-api_test
     hostname: todo-api.test.xanderj.com
     environment:
-      - POSTGRES_URL=todo-db:5432
+      - POSTGRES_URL=todo-db_test:5432
       - POSTGRES_USER=xanderj.system
       - POSTGRES_PW=password
       - POSTGRES_DB=todo-db
@@ -28,23 +24,19 @@ services:
       - VIRTUAL_HOST=todo-api.test.xanderj.com
       - LETSENCRYPT_HOST=todo-api.test.xanderj.com
       - LETSENCRYPT_EMAIL=xanderj.system@gmail.com
-    ports:
-      - 5001:5000
     volumes:
       - "./api:/api:ro"
 
-  todo-gui:
-    build:
-      context: ./gui
-      dockerfile: Dockerfile
-    container_name: todo-gui
+  todo-gui_test:
+    image: todo-gui:test
+    container_name: todo-gui_test
     hostname: todo.test.xanderj.com
     environment:
+      - REACT_APP_ENVIRONMENT=test
+      - REACT_APP_API_ENDPOINT=https://todo-api.test.xanderj.com
       - VIRTUAL_HOST=todo.test.xanderj.com
       - LETSENCRYPT_HOST=todo.test.xanderj.com
       - LETSENCRYPT_EMAIL=xanderj.system@gmail.com
-    ports:
-      - 5000:5000
 
 networks:
   default:

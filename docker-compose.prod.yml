@@ -1,0 +1,44 @@
+version: '2.2'
+services:
+  todo-db_prod:
+    image: postgres
+    user: "${UID}:${GID}"
+    container_name: todo-db_prod
+    environment:
+      - POSTGRES_USER=xanderj.system
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=todo-db
+    volumes:
+      - "./pgdata_prod:/var/lib/postgresql/data"
+
+  todo-api_prod:
+    image: todo-api:prod
+    container_name: todo-api_prod
+    hostname: todo-api.xanderj.com
+    environment:
+      - POSTGRES_URL=todo-db_prod:5432
+      - POSTGRES_USER=xanderj.system
+      - POSTGRES_PW=password
+      - POSTGRES_DB=todo-db
+      - FLASK_ENV=development
+      - VIRTUAL_HOST=todo-api.xanderj.com
+      - LETSENCRYPT_HOST=todo-api.xanderj.com
+      - LETSENCRYPT_EMAIL=xanderj.system@gmail.com
+    volumes:
+      - "./api:/api:ro"
+
+  todo-gui_prod:
+    image: todo-gui:prod
+    container_name: todo-gui_prod
+    hostname: todo.xanderj.com
+    environment:
+      - REACT_APP_ENVIRONMENT=prod
+      - REACT_APP_API_ENDPOINT=https://todo-api.xanderj.com
+      - VIRTUAL_HOST=todo.xanderj.com
+      - LETSENCRYPT_HOST=todo.xanderj.com
+      - LETSENCRYPT_EMAIL=xanderj.system@gmail.com
+
+networks:
+  default:
+    external:
+      name: nginx-proxy

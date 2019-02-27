@@ -1,0 +1,9 @@
+FROM node:11
+
+RUN mkdir /gui
+
+WORKDIR /gui/
+
+EXPOSE 3000
+
+CMD yarn install && yarn start

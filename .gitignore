@@ -1,2 +1,3 @@
-pgadmin/
-pgdata/
+pgdata_production/
+pgdata_test/
+pgdata_dev/
