@@ -1,5 +1,14 @@
-body {
-  font-size: 1.6rem;
+* {
+  font-size: 1.4rem;
+  /* font-family: Arial; */
+ }
+
+.delete-button{
+  float: right !important;
+}
+
+.complete-check{
+  float: left !important;
 }
 
 input[type="checkbox"] {

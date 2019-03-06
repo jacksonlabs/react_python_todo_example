@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 
 import axios from 'axios';
 
-import { Container, Row, Col } from 'reactstrap';
 import { Navbar, NavbarBrand } from 'reactstrap';
-import { Table } from 'reactstrap';
 import { Input, Button, InputGroup, InputGroupAddon, InputGroupText, Label } from 'reactstrap';
 
 import {ToDoContext} from './ToDoContext';
@@ -156,9 +154,16 @@ class ToDo extends Component {
 
   render() {
     var taskPanel;
+    const completeCheck = <Label>
+                            {/* {this.props.id} */}
+                            <Input
+                              type="checkbox"
+                              checked={this.state.complete}
+                              value={this.state.complete}
+                              onChange={e => {this.toggleComplete()}} />
+                          </Label>
     if (this.state.inFocus) {
       taskPanel = <React.Fragment>
-                    <InputGroup>
                       <Input
                         value={this.state.task}
                         onChange={e => this.setState({task: e.target.value})}
@@ -170,31 +175,28 @@ class ToDo extends Component {
                         }}
                       />
                       <Button onClick={() => {
-                        this.context.state.updateTask(this.props.id, this.state.task);
-                        this.setState({inFocus: false});
-                      }} color="primary" style={{ marginLeft: 10 }}>Save</Button>
-                    </InputGroup>
+                          this.context.state.updateTask(this.props.id, this.state.task);
+                          this.setState({inFocus: false});
+                        }} color="primary" style={{ marginLeft: 10 }}>Save</Button>
                   </React.Fragment>;
     } else {
-      taskPanel = <Label onClick={() => {this.setState({inFocus: true})}}>{this.state.task}</Label>;
+      taskPanel = <Label onClick={() => {this.setState({inFocus: true})}}>
+                    {this.state.task}
+                  </Label>;
     }
     return (
         <ToDoContext.Consumer>
           {(context) => (
-              <tr>
-                {/* <th scope="row">
-                  {this.props.id}
-                </th> */}
-                <td align="center">
-                  <Input type="checkbox" checked={this.state.complete} value={this.state.complete} onChange={e => {this.toggleComplete()}} />
-                </td>
-                <td>
-                  {taskPanel}
-                </td>
-                <td align='right'>
-                  <Button onClick={() => {context.state.deleteItem(this.props.id)}} color="danger">Delete</Button>
-                </td>
-              </tr>
+            <span>  
+              <InputGroup>
+                {completeCheck}
+                {taskPanel}
+                <Button
+                  onClick={() => {
+                    context.state.deleteItem(this.props.id)
+                  }} color="danger" style={{ marginLeft: 10 }}>Delete</Button>
+              </InputGroup>
+            </span>
           )}
         </ToDoContext.Consumer>
     );
@@ -210,20 +212,12 @@ class ToDoList extends Component {
     return (
         <ToDoContext.Consumer>
           {(context) => (
-            <div style={{ marginTop: 20 }}>
-              <Table striped borderless width="100%">
-                <thead>
-                  <tr>
-                    {/* <th>id</th> */}
-                    <th width="10%" align="center">Complete</th>
-                    <th>Task</th>
-                    <th width="10%"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {context.state.list.map(todo => <ToDo key={todo.id} id={todo.id}/>)}
-                </tbody>
-              </Table>
+            <div style={{ margin: 10 }}>
+              <ul class="list-group">
+                {context.state.list.map(todo => 
+                  <li class="list-group-item"><ToDo key={todo.id} id={todo.id}/></li>
+                )}
+              </ul>
             </div>
           )}
         </ToDoContext.Consumer>
@@ -241,7 +235,7 @@ class ToDoAdd extends Component {
     return (
         <ToDoContext.Consumer>
             {(context) => (
-              <div style={{ marginTop: 20 }}>
+              <div style={{ margin: 10 }}>
                 <InputGroup>
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>Task</InputGroupText>
@@ -293,7 +287,7 @@ class ToDoSettings extends Component {
     return (
         <ToDoContext.Consumer>
             {(context) => (
-              <div style={{ marginTop: 20 }}>
+              <div style={{ margin: 10 }}>
                 <InputGroup>
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
@@ -323,17 +317,11 @@ class App extends Component {
           <Navbar color="dark" dark className="navbar-expand">
             <NavbarBrand href="/" className="mr-auto">ToDo List <span role="img" aria-label="">🍺</span></NavbarBrand>
           </Navbar>
-          <Container fluid>
-            <Row>
-              <Col><ToDoAdd /></Col>
-            </Row>
-            <Row>
-              <Col><ToDoSettings /></Col>
-            </Row>
-            <Row>
-              <Col><ToDoList /></Col>
-            </Row>
-          </Container>
+          <div style={{ margin: 10 }}>
+            <ToDoAdd />
+            <ToDoSettings />
+            <ToDoList />
+          </div>
         </div>
       </MyProvider>
     );
